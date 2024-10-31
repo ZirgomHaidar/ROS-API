@@ -1,6 +1,8 @@
 from fastapi import FastAPI
 import requests
 from pydantic import BaseModel
+from apscheduler.schedulers.background import BackgroundScheduler
+from contextlib import asynccontextmanager
 
 class DnListModel(BaseModel):
     codename : str
@@ -12,7 +14,17 @@ class DnListModel(BaseModel):
 
 deviceInfo_list : list[DnListModel] = []
 
-app = FastAPI(title="ROSAPI", version="0.1.0")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    print("Startup and updating the devicelist now")
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(update_devicelist, "interval", minutes=10)
+    scheduler.start()
+    update_devicelist() # Run on startup once and then run it with 10 mins of interval
+    print("DeviceList is updated!!")
+    yield
+
+app = FastAPI(title="ROSAPI", version="0.5.0", lifespan=lifespan)
 
 def update_devicelist():
     # getting the list of official devices
