@@ -24,13 +24,15 @@ A RESTful API made using **FASTAPI written in Python(v3.11 and above)** service 
 - pydantic
 - apscheduler
 - git
+- pygithub
+- python-dotenv
 
 ### API Documentation
 
 you can access:
 
-- Swagger UI documentation at https://ros-api-2to4.onrender.com/docs
-- ReDoc documentation at https://ros-api-2to4.onrender.com/redoc
+- Swagger UI documentation at https://ros-api-98t4.onrender.com/docs
+- ReDoc documentation at https://ros-api-98t4.onrender.com/redoc
 
 ### API Endpoints
 
