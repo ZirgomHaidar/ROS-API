@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
     yield
     print("Shutting Down the API")
 
-app = FastAPI(title="ROSAPI", version="1.0.0", lifespan=lifespan)
+app = FastAPI(title="ROSAPI", version="1.1.0", lifespan=lifespan)
 
 # API entry
 @app.get("/")

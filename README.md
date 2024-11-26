@@ -1,4 +1,4 @@
-# RisingOS API [v1.0.0]
+# RisingOS API [v1.1.0]
 
 A RESTful API made using **FASTAPI written in Python(v3.11 and above)** service that provides OTA (Over-The-Air) update information for RisingOS ROM. This API fetches and serves data from the [RisingOTA](https://github.com/RisingOSS-devices/android_vendor_RisingOTA) repository, making it easy to access device-specific ROM information programmatically.
 
@@ -14,6 +14,8 @@ A RESTful API made using **FASTAPI written in Python(v3.11 and above)** service 
 - Cached responses for improved performance
 - Comprehensive device and build information
 - JSON response format
+- Using concurreny to improve fetching time
+- Authentication using GitHub API
 
 ### Prerequisites
 

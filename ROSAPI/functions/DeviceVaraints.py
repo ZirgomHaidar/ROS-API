@@ -1,23 +1,26 @@
-import requests
 from ROSAPI.Models.deviceModels import variantDataModel
+from ROSAPI.authentication.github import repo
+from concurrent.futures import ThreadPoolExecutor
+import json
 
 def deviceVariants(codename: str):
-    variants_data : list[variantDataModel] = []
+    """
+    Fetches variant data for a given codename concurrently.
+    Returns a list of variant data in the order: vanilla -> core -> gapps.
+    """
+    def fetch_variant(variant: str):
+        try:
+            response = repo.get_contents(f"{variant}_{codename}.json").decoded_content.decode("utf-8")
+            return json.loads(response)['response'][0]
+        except Exception:
+            print(f"{variant} variant not available")
+            return None
 
-    vanilla_response = requests.get(f"https://raw.githubusercontent.com/ZirgomHaidar/android_vendor_RisingOTA/refs/heads/fourteen/VANILLA_{codename}.json")
-    core_response = requests.get(f"https://raw.githubusercontent.com/ZirgomHaidar/android_vendor_RisingOTA/refs/heads/fourteen/CORE_{codename}.json")
-    gapps_response = requests.get(f"https://raw.githubusercontent.com/ZirgomHaidar/android_vendor_RisingOTA/refs/heads/fourteen/GAPPS_{codename}.json")
+    variants = ["VANILLA", "CORE", "GAPPS"]
 
-    if vanilla_response.status_code == 200:
-        vanilla_data = vanilla_response.json()
-        variants_data.append(vanilla_data['response'][0])
+    # Fetch all variants concurrently
+    with ThreadPoolExecutor() as executor:
+        results = list(executor.map(fetch_variant, variants))
 
-    if core_response.status_code == 200:
-        core_data = core_response.json()
-        variants_data.append(core_data['response'][0])
-
-    if gapps_response.status_code == 200:
-        gapps_data = gapps_response.json()
-        variants_data.append(gapps_data['response'][0])
-
-    return variants_data # the data will always return in order vanilla -> core -> gapps
+    # Filter out None results and return the data in the desired order
+    return [variant for variant in results if variant]

@@ -3,3 +3,5 @@ requests
 pydantic
 apscheduler
 uvicorn
+PyGithub
+python-dotenv
